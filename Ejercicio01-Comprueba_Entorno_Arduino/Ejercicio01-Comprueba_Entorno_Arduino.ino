@@ -36,7 +36,7 @@ Servo miservo;
 SimpleDHT11 dht11(PIN_DHT11);
 
 //Objeto pantalla
-LiquidCrystal_I2C lcd(0x27, 16, 2); // set the LCD address to 0x27 for a 16 chars and 2 line display
+LiquidCrystal_I2C lcd(0x3F, 16, 2); // set the LCD address to 0x27 or 0x3F, it depends, for a 16 chars and 2 line display
 
 void setup() {
   //Inicializo puerto serie
