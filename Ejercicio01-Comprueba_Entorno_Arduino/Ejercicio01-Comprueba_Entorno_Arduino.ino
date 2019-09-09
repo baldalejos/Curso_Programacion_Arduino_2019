@@ -17,22 +17,16 @@ void setup() {
 void loop() {
  int maximo = 0;
   int minimo = 1023;
-  Serial.println(A1);
-  lcd.setCursor(0, 0);
-  lcd.setCursor(0, 1);
+ lcd.setCursor (0,0);
+ lcd.print ("Valor del sensor:");
+  lcd.setCursor(6, 1);
+ 
    int sensorValue = analogRead(PIN_LDR);
     maximo = max(maximo, sensorValue);
     minimo = min(minimo, sensorValue);
-    Serial.print(sensorValue);
-    Serial.print(",");
-    Serial.print(maximo);
-    Serial.print(",");
-    Serial.println(minimo);
+   
     lcd.print(sensorValue);
-    lcd.print(",");
-    lcd.print(maximo);
-    lcd.print(",");
-    lcd.print(minimo);
+   
     delay(500);
   
   }
