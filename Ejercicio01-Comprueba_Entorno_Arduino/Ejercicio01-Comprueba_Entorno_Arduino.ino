@@ -22,7 +22,7 @@ void setup() {
 
 void loop() {
   duracion = pulseIn(PIN_BOTON_A, LOW, 20000000); //el programa se bloquea en este punto
-  Serial.println(duracion / 1000); //en milisegundos
+  Serial.println(duracion / 1100); //en milisegundos
   if (duracion == 0) {
     Serial.println("pulsacion no detectada en 20 segundos");
   }
