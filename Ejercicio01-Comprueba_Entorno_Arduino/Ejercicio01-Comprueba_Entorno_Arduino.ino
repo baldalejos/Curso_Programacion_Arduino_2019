@@ -1,55 +1,30 @@
-#define PIN_BOTON_A 2
-#define PIN_LED_1 4
-#define PIN_LED_2 5 //PWM
-#define PIN_LED_3 6 //PWM
-#define PIN_LED_4 7
+#include "Contador.h"
+#include "DetectaFlanco.h"
 
-unsigned long duracion = 0;
-boolean estado_luces = 0; //0 = apagado, 1 = encendido
-byte pin_encendido = PIN_LED_1;
+#define PIN_BOTON_A 2
+#define PIN_BOTON_B 3
+
+Contador C1,C2;
+DetectaFlanco DF1(PIN_BOTON_A), DF2(PIN_BOTON_B);
 
 void setup() {
   Serial.begin(9600);
-
-  //Inicializo Pines
-  Serial.println(F("Inicializando pines digitales..."));
-  pinMode(PIN_BOTON_A, INPUT_PULLUP);
-  pinMode(PIN_LED_1, OUTPUT);
-  pinMode(PIN_LED_2, OUTPUT);
-  pinMode(PIN_LED_3, OUTPUT);
-  pinMode(PIN_LED_4, OUTPUT);
+  DF1.inicio(INPUT_PULLUP);
+  DF2.inicio(INPUT);
+  C1.SetContador(10);
+  C2.SetContador(100);
 }
 
 void loop() {
-  duracion = pulseIn(PIN_BOTON_A, LOW, 20000000); //el programa se bloquea en este punto
-  Serial.println(duracion / 1100); //en milisegundos
-  if (duracion == 0) {
-    Serial.println("pulsacion no detectada en 20 segundos");
+  if (DF1.comprueba() == -1) {
+    C1.Incrementar() ;
+    Serial.println("C1 = " + (String)C1.GetCont());
   }
-  else if (duracion > 2000000) {
-    Serial.println("pulsacion larga");
-    if (estado_luces == 0) {
-      estado_luces = 1;
-      digitalWrite(pin_encendido, HIGH);
-      Serial.println("Enciendo pin " + (String)pin_encendido);
-    }
-    else {
-      estado_luces = 0;
-      digitalWrite(pin_encendido, LOW);
-      Serial.println("Apago Leds");
-      pin_encendido = PIN_LED_1; //inicializo el led a iluminar
-    }
+
+  if (DF2.comprueba() == 1) {
+    C2.Incrementar() ;
+    Serial.println("C2 = " + (String)C2.GetCont());
   }
-  else {
-    Serial.println("pulsacion corta");
-    if (estado_luces == 1) {
-      digitalWrite(pin_encendido, LOW);
-      Serial.println("Apago pin " + (String)pin_encendido);
-      pin_encendido++;
-      if (pin_encendido > PIN_LED_4)
-        pin_encendido = PIN_LED_1;
-      digitalWrite(pin_encendido, HIGH);
-      Serial.println("Enciendo pin " + (String)pin_encendido);
-    }
-  }
+
+  delay(50); //Evitar rebotes
 }
